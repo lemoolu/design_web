@@ -1,0 +1,7 @@
+{
+  "name" : "designWeb",
+  "script" : "server.js",
+  "env_production" : {
+    "NODE_ENV": "production"
+  }
+}
