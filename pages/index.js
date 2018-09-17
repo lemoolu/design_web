@@ -1,9 +1,20 @@
 import React from 'react';
-import Link from 'next/link'
+import axios from 'axios';
+import {Header} from '../containers';
 
 
-export default () => {
-  return <div>dsfgfsdg<Link href={{ pathname: '/hello', query: { name: 'Zeit' } }}>
-      <a>here</a>
-    </Link>{' '}</div>;
+class Index extends React.Component {
+  componentDidMount() {}
+
+  render() {
+    return (
+      <div>
+        <Header />
+        index
+
+      </div>
+    )
+  }
 }
+
+export default Index;
