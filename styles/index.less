@@ -1,3 +1,18 @@
-body{
-  color: red;
+@min-width: 1000px;
+@header-height: 60px;
+@color-primary: #00EBCD;
+
+body {
+  color: #222;
 }
+
+.container {
+  width: @min-width;
+  margin: auto;
+}
+
+@import "_antd";
+@import "_containers";
+@import "_components";
+@import "_login";
+
