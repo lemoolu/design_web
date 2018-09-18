@@ -8,6 +8,7 @@ class Input extends React.Component {
     value: undefined,
     onChange: undefined,
     addonAfter: undefined,
+    type: 'text',
   }
 
   render() {
@@ -18,7 +19,12 @@ class Input extends React.Component {
 
     return (
       <div className={classNames.join(' ')}>
-        <input type="text" {...this.props}/>
+        <input 
+          type={this.props.type} 
+          placeholder={this.props.placeholder} 
+          value={this.props.value}
+          onChange={this.props.onChange}
+        />
         <div className="app-input__addafter">
           {this.props.addonAfter}
         </div>

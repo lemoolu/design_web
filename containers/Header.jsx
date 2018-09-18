@@ -36,7 +36,7 @@ class Header extends React.Component {
               <Link href="/"><img src="/static/logo.png" alt="" height="25"/></Link>
             </div>
             <ul className="header__menu">
-              <li>问题</li>
+              <li className="sel">问题</li>
               <li>故事</li>
             </ul>
             <div className="header__login">

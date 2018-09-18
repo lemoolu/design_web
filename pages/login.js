@@ -44,7 +44,7 @@ class Page extends React.Component {
           <div className="login__form">
             <Input value={formData.name} onChange={e => this.onFormItemChange(e.target.value, 'name')} placeholder="昵称"/>
             <Input value={formData.phone} onChange={e => this.onFormItemChange(e.target.value, 'phone')} placeholder="手机号"/>
-            <Input value={formData.password} onChange={e => this.onFormItemChange(e.target.value, 'password')} placeholder="密码"/>
+            <Input value={formData.password} onChange={e => this.onFormItemChange(e.target.value, 'password')} type="password" placeholder="密码"/>
             <Input value={formData.visit_code} onChange={e => this.onFormItemChange(e.target.value, 'visit_code')} placeholder="邀请码"/>
             <Input value={formData.msg_code} onChange={e => this.onFormItemChange(e.target.value, 'msg_code')} placeholder="短信验证码" 
               addonAfter={<Button >发送验证码</Button>}/>
