@@ -1,0 +1,91 @@
+.my {
+  .my_background {
+    position: relative;
+    text-align: center;
+    padding-top: 68px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #979797;
+  }
+  .my_background-avator {
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin: 0 auto 10px auto;
+    border: 1px solid #eee;
+    img {
+      width: 100%;
+    }
+  }
+  .my_background-name {
+    display: block;
+    font-size: 16px;
+    color: #282828;
+    margin-bottom: 46px;
+  }
+  .my_background-exp {
+    font-size: 20px;
+    color: @color-primary;
+  }
+  .my_background-code {
+    position: absolute;
+    right: 0;
+    bottom: 17px;
+    color: @color-font-base;
+  }
+
+  .my_desc {
+    padding: 60px 0 40px 0;
+    h3 {
+      font-size: 20px;
+      color: @color-font-base;
+      margin-bottom: 30px;
+    }
+  }
+
+  .my_problems {
+    ul {
+      list-style: none;
+      margin: 0;
+      display: block;
+      padding: 0;
+    }
+    ul.my_problems-tab {
+      padding: 30px 0;
+      li {
+        display: inline-block;
+        font-size: 20px;
+        color: #7C7C7C;
+        margin-right: 24px;
+        cursor: pointer;
+        &.sel {
+          color: @color-font-base;
+        }
+      }
+    }
+    ul.my_problems-list {
+      li {
+        position: relative;
+        display: block;
+        padding: 5px 0 5px 20px;
+        a {
+          color: @color-font-base;
+          &:hover {
+            color: lighten(@color-font-base, 30%);
+            text-decoration: underline;
+          }
+        }
+        &:before {
+          position: absolute;
+          left: 0;
+          top: 12px;
+          width: 10px;
+          height: 10px;
+          background: #FFEE55;
+          border-radius: 50%;
+          content: ''
+        }
+      }
+    }
+  }
+}

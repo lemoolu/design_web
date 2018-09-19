@@ -16,13 +16,13 @@ class Page extends React.Component {
   }
 
   componentDidMount() {
-    this.props.actions.setTitle('问题添加');
+    this.props.actions.setTitle('故事');
   }
 
   render() {
     return (
       <React.Fragment>
-        问题添加
+        故事
       </React.Fragment>
     )
   }

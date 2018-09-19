@@ -2,20 +2,39 @@ import React from 'react';
 import Head from 'next/head';
 import api from 'app/api';
 import Link from 'next/link';
+import Router from 'next/router'
 
-
-async function getLoginData() {
-  return api.authInfo();
-}
 
 class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentPage: null, // 当前菜单选中页面
+    };
+  }
 
   componentDidMount() {
+    this.setMenuItemSel();
+  }
 
+  componentDidUpdate(prevProps, prevState) {
+    this.setMenuItemSel();
   }
 
   static defaultProps = {
     title: null
+  }
+
+  setMenuItemSel() {
+    let currentPage = null;
+    if (/problem/.test(Router.route)) {
+      currentPage = 'problem';
+    } else if (/story/.test(Router.route)) {
+      currentPage = 'story';
+    }
+    if (currentPage !== this.state.currentPage) {
+      this.setState({ currentPage })
+    }
   }
 
   render() {
@@ -36,14 +55,12 @@ class Header extends React.Component {
               <Link href="/"><img src="/static/logo.png" alt="" height="25"/></Link>
             </div>
             <ul className="header__menu">
-              <li className="sel">问题</li>
-              <li>故事</li>
+              <li className={this.state.currentPage === 'problem' && 'sel'}><Link href="/problem"><a>问题</a></Link></li>
+              <li  className={this.state.currentPage === 'story' && 'sel'}><Link href="/story"><a>故事</a></Link></li>
             </ul>
             <div className="header__login">
-              
-              <Link href="/about"><a>发布问题</a></Link>
+              <Link href="/problem/add"><a>发布问题</a></Link>
               <Link href="/login"><a>登陆</a></Link>
-              
             </div>
           </div>
         </div>
