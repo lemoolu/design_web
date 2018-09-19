@@ -27,7 +27,7 @@ class Header extends React.Component {
 
   setMenuItemSel() {
     let currentPage = null;
-    if (/problem/.test(Router.route)) {
+    if (Router.route === '/' || /problem/.test(Router.route)) {
       currentPage = 'problem';
     } else if (/story/.test(Router.route)) {
       currentPage = 'story';
@@ -55,7 +55,7 @@ class Header extends React.Component {
               <Link href="/"><img src="/static/logo.png" alt="" height="25"/></Link>
             </div>
             <ul className="header__menu">
-              <li className={this.state.currentPage === 'problem' && 'sel'}><Link href="/problem"><a>问题</a></Link></li>
+              <li className={this.state.currentPage === 'problem' && 'sel'}><Link href="/"><a>问题</a></Link></li>
               <li  className={this.state.currentPage === 'story' && 'sel'}><Link href="/story"><a>故事</a></Link></li>
             </ul>
             <div className="header__login">

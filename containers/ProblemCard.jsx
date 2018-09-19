@@ -35,6 +35,7 @@ class Problem extends React.Component {
         <UserBar>
           <div className="ctn-problem__user-star">收藏数：203</div>
         </UserBar>
+        <div className="ctn-problem__img"></div>
       </div>
     )
   }
