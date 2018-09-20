@@ -4,12 +4,15 @@ import _ from 'lodash';
 import { Header } from 'app/containers';
 import { Input, Button } from 'app/components';
 import api from 'app/api';
+import Router from 'next/router';
+import Link from 'next/link';
 
 class Page extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       problemType: 'join', // join or star
+      userData: {}
     };
   }
 
@@ -19,6 +22,14 @@ class Page extends React.Component {
 
   componentDidMount() {
     this.props.actions.setTitle('个人中心');
+
+    api.authInfo().then(res => {
+      if (res.status === 'success') {
+        this.setState({ userData: res.data })
+      } else {
+        Router.push('/login');
+      }
+    });
   }
 
   onProblemTypeChange = (type) => {
@@ -26,26 +37,28 @@ class Page extends React.Component {
   }
 
   render() {
+    let userData = this.state.userData;
     return (
       <React.Fragment>
         <div className="my">
           <div className="my_background">
             <div className="my_background-avator">
-              <img src="/static/logo.png" alt=""/>
+              <img src={_.get(userData, 'avatar')} alt=""/>
             </div>
-            <span className="my_background-name">想要飞翔的南瓜</span>
-            <span className="my_background-exp">超能力 10</span>
-            <a className="my_background-code">我的邀请码</a>
+            <span className="my_background-name">{_.get(userData, 'name')}</span>
+            <span className="my_background-exp">超能力 {_.get(userData, 'ability_value')}</span>
+            <Link href="/my/edit"><a className="my_background-setting">设置</a></Link>
+            <Link href="/my/code"><a className="my_background-code">我的邀请码</a></Link>
           </div>
           <div className="my_desc">
-            <h3>平面设计师</h3>
-            <p>About Me，Whenever you need to buy something that will go with whatever you are wearing that day, you may need to think about getting some designer watches. A watch is a piece of jewelry that you can wear every day, and it pretty much, will go with anything you are wearing. It’s not always going to make you look dressed up, but it may help you look more stylish, and sometimes that is all you want. Watches are the perfect answer to what you can wear with anything, because we are living in a world that always has to go through what time it is. There are a lot of different designer watches in the stoes. Some cost a lot than others. Though, you do not have to have a too costly watch to make yourself look good. Sometimes just owning a standard, everyday watch is another way to get the look you are going for.</p>
+            <h3>{_.get(userData, 'job') || '（神秘设计师）'}</h3>
+            <p>{_.get(userData, 'introduction') || '（没有任何介绍....）'}</p>
           </div>
 
           <div className="my_problems">
             <ul className="my_problems-tab">
-              <li className={this.state.problemType === 'join' && 'sel'} onClick={() => this.onProblemTypeChange('join')}>参与的问题</li>
-              <li className={this.state.problemType === 'star' && 'sel'} onClick={() => this.onProblemTypeChange('star')}>关注的问题</li>
+              <li className={this.state.problemType === 'join' ? 'sel' : undefined} onClick={() => this.onProblemTypeChange('join')}>参与的问题</li>
+              <li className={this.state.problemType === 'star' ? 'sel' : undefined} onClick={() => this.onProblemTypeChange('star')}>关注的问题</li>
             </ul>
             <ul className="my_problems-list">
               <li><a>聚会或一起时候，矿泉水瓶子总是分不清谁是谁的？</a></li>

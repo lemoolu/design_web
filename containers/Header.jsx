@@ -2,7 +2,7 @@ import React from 'react';
 import Head from 'next/head';
 import api from 'app/api';
 import Link from 'next/link';
-import Router from 'next/router'
+import Router from 'next/router';
 
 
 class Header extends React.Component {
@@ -22,7 +22,8 @@ class Header extends React.Component {
   }
 
   static defaultProps = {
-    title: null
+    title: null,
+    userData: null
   }
 
   setMenuItemSel() {
@@ -43,6 +44,8 @@ class Header extends React.Component {
       title = this.props.title + ' - ' + title;
     }
 
+    let userData = this.props.userData;
+
     return (
       <React.Fragment>
         <Head>
@@ -55,12 +58,20 @@ class Header extends React.Component {
               <Link href="/"><img src="/static/logo.png" alt="" height="25"/></Link>
             </div>
             <ul className="header__menu">
-              <li className={this.state.currentPage === 'problem' && 'sel'}><Link href="/"><a>问题</a></Link></li>
-              <li  className={this.state.currentPage === 'story' && 'sel'}><Link href="/story"><a>故事</a></Link></li>
+              <li className={this.state.currentPage === 'problem' ? 'sel' : undefined}><Link href="/"><a>问题</a></Link></li>
+              <li  className={this.state.currentPage === 'story' ? 'sel' : undefined}><Link href="/story"><a>故事</a></Link></li>
             </ul>
             <div className="header__login">
               <Link href="/problem/add"><a>发布问题</a></Link>
-              <Link href="/login"><a>登陆</a></Link>
+              { userData && 
+                <span>
+                  <Link href="/my"><a>{userData.name}</a></Link>
+                  <Link href="/api/log/out"><a>退出</a></Link>
+                </span>
+              }
+              { !userData && 
+                <Link href="/login"><a>登录</a></Link>
+              }
             </div>
           </div>
         </div>

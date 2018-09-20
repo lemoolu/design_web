@@ -14,13 +14,13 @@ export default class MyApp extends App {
       pageProps = await Component.getInitialProps(ctx)
     }
 
-    return { pageProps, userData: {} }
+    return { pageProps }
   }
   constructor(props) {
     super(props);
     this.state = {
       title: undefined,
-      userData: {},
+      userData: null,
       actions: {
         setTitle: this.setTitle
       }
@@ -32,11 +32,18 @@ export default class MyApp extends App {
     this.setState({ title });
   }
 
+  getUserData = () => {
+    api.authInfo().then(res => {
+      if (res.status === 'success') {
+        this.setState({ userData: res.data })
+      } else {
+        this.setState({ userData: null })
+      }
+    });
+  }
 
   componentDidMount() {
-    api.authInfo().then(res => {
-      console.log(res);
-    });
+    this.getUserData();
   }
 
   // componentDidCatch() {
@@ -47,7 +54,7 @@ export default class MyApp extends App {
     const { Component, pageProps, userData } = this.props
     return (
       <Container>
-        <Header title={this.state.title}/>
+        <Header title={this.state.title} userData={this.state.userData}/>
         <div className="container">
           <Component {...pageProps} userData={userData} actions={this.state.actions} />
         </div>
