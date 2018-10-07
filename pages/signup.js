@@ -4,6 +4,8 @@ import _ from 'lodash';
 import { Header } from 'app/containers';
 import { Input, Button } from 'app/components';
 import api from 'app/api';
+import { message } from 'antd';
+import Router from 'next/router';
 
 class Page extends React.Component {
   constructor(props) {
@@ -31,6 +33,16 @@ class Page extends React.Component {
 
   onSubmit = () => {
     console.log(this.state.formData);
+    api.authSignup(this.state.formData).then(res => {
+      if (res.status === 'success') {
+        message.success('注册成功');
+        Router.push({
+          pathname: '/login',
+        });
+      } else {
+        message.error(res.message);
+      }
+    })
   }
 
   render() {

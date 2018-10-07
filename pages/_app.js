@@ -56,7 +56,7 @@ export default class MyApp extends App {
       <Container>
         <Header title={this.state.title} userData={this.state.userData}/>
         <div className="container">
-          <Component {...pageProps} userData={userData} actions={this.state.actions} />
+          <Component {...pageProps} userData={this.state.userData} actions={this.state.actions} />
         </div>
       </Container>
     )

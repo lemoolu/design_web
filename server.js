@@ -16,6 +16,7 @@ app.prepare().then(() => {
   const server = express()
 
   server.use('/api', proxy(proxyOptions));
+  server.use('/public', proxy(proxyOptions));
 
   // server.get('/b', (req, res) => {
   //   return app.render(req, res, '/hello', req.query)

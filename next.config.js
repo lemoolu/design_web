@@ -7,6 +7,7 @@ module.exports = withLess({
   webpack(config, options) {
     // 配置 import app地址
     config.resolve.alias.app = appDirectory;
+    // config.externals.unshift('antd');
     return config;
   }
 })

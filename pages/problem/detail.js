@@ -1,31 +1,33 @@
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { Header, UserBar } from 'app/containers';
-import { Input, Button } from 'app/components';
+import Router from 'next/router';
+import { Header, UserBar, Solution } from 'app/containers';
+import { needLogin } from 'app/components';
+import { Input, Button, message } from 'antd';
 import api from 'app/api';
+import qs from 'qs';
 
-function Solution(){
-  return(
-    <li className="problem-solution__item">
-      <UserBar></UserBar>
-      <div className="problem-solution__item-main">1，它能帮助人们从源头从新定义问题，这决定了解决方案一定是革新的，而非改良的；</div>
-      <div className="problem-solution__item-more"><a>展开阅读全文</a></div>
-      <div className="problem-solution__item-bar">
-        <a className="updata">上传原型图</a>
-        <a className="discuss">讨论</a>
-        <a className="vote">投票(1)</a>
-        <a className="like">点赞</a>
-      </div>
-    </li> 
-  )
-}
 
+const TextArea = Input.TextArea;
 
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    // console.log(Router.query.id)
+    this.state = {
+      problemId: props.id,
+      problemData: {},
+      addSolutionData: {
+        content: ''
+      },
+      solutionListPage: 1,
+      solutionList: [],
+      addSolution: false,
+      hasSolution: true, // 是否有解决方案
+      hasSolutionMore: true, // 是否还有解决方案
+      commentList: [], // 评论列表 {solutionId, page, list} 
+    };
   }
 
   static async getInitialProps({ Component, router, ctx }) {
@@ -34,31 +36,161 @@ class Page extends React.Component {
 
   componentDidMount() {
     this.props.actions.setTitle('问题添加');
+    this.setState({
+      problemId: _.get(qs.parse(window.location.search.replace('?', '')), 'id')
+    }, () => {
+      this.getProblemDetail();
+      this.getSolutionList();
+    })
   }
 
+
+  getProblemDetail = () => {
+    api.problemDetail({ id: this.state.problemId }).then(res => {
+      this.setState({ problemData: res.data });
+    });
+  }
+
+  // 关注问题
+  onProblemStar = () => {
+
+  }
+
+  getSolutionList = () => {
+    api.solutionList({ problem_id: this.state.problemId, page: this.state.solutionListPage, pageSize: 3 }).then(res => {
+      let solutionList = this.state.solutionList;
+      solutionList = solutionList.concat(res.data.list);
+      this.setState({
+        solutionList,
+        solutionListPage: this.state.solutionListPage + 1,
+        hasSolution: !(solutionList.length === 0),
+        hasSolutionMore: !(solutionList.length === res.data.total)
+      });
+    });
+  }
+
+  // 解决方案投票
+  onSolutionVote = () => {
+
+  }
+
+  // 获取解决方案评论列表
+  getSolutionCommentList = () => {
+
+  }
+
+  onShowAddSolution = () => {
+    console.log(this.props)
+    if (!this.props.userData) {
+      Router.push({
+        pathname: '/login',
+        // query: { id }
+      });
+      return;
+    }
+    this.setState({ addSolution: true });
+  }
+
+  onHideAddSolution = () => {
+    this.setState({ addSolution: false });
+  }
+
+  onAddSolutionContentChange = (e) => {
+    let addSolutionData = this.state.addSolutionData;
+    addSolutionData.content = e.target.value;
+    this.setState({ addSolutionData })
+  }
+
+  onAddSolutionSubmit = () => {
+    api.solutionAdd({ ...this.state.addSolutionData, problem_id: this.state.problemId }).then(res => {
+      message.success('解决方案添加成功');
+      api.solutionList({ problem_id: this.state.problemId, page: 1, pageSize: 5 }).then(res => {
+        let solutionList = res.data.list;
+        solutionList = solutionList.concat(this.state.solutionList);
+        solutionList = _.unionBy(solutionList, 'id');
+        this.setState({
+          solutionList,
+        });
+      });
+      this.setState({
+        addSolution: false,
+      });
+    });
+  }
+
+  onStarProblem = () => {
+    if (!this.props.userData) {
+      Router.push({
+        pathname: '/login',
+      });
+      return;
+    }
+    api.problemStar({ problem_id: this.state.problemId }).then(res => {
+      if (res.status === 'success') {
+        message.success('关注成功');
+        this.getProblemDetail();
+      } else {
+        message.error(res.message)
+      }
+    });
+  }
+
+
+
   render() {
+
+    const problemData = this.state.problemData || {};
+
     return (
       <React.Fragment>
         <div className="problem-detail">
           <div className="problem-detail__rate">进度：头脑风暴</div>
-          <h1 className="problem-detail__title">高铁站进站闸门先前进再拔票会闯禁，严重降低效率。</h1>
+          <h1 className="problem-detail__title">{problemData.title}</h1>
           <div className="problem-detail__main">
-            高铁站在人流特别多的时候，进展效率经常受到闯禁影响，后续的人情绪在有限时间内很影响，效率也不高…
+            {problemData.content}
           </div>
-          <UserBar>
+          <UserBar data={problemData.user_data}>
             <div className="problem-detail__user">
-              <span>发布于2018.10.21 </span>
-              <span>12919次浏览</span>
-              <span>203个持续关注</span>
-              <a>写解决方案</a>
+              <span>发布于 {problemData.created_at}</span>
+              <span>{problemData.visit_count}次浏览</span>
+              <span>{problemData.star_count}个持续关注</span>
+              <a onClick={this.onShowAddSolution}>写解决方案</a>&nbsp;
+              <a onClick={this.onStarProblem}>关注</a>
             </div>
           </UserBar>
         </div>
 
-        <ul className="problem-solution">
-          <Solution></Solution>
-          <Solution></Solution>
-        </ul>
+        <div className="problem-solution">
+
+          {this.state.addSolution === true && 
+            <div>
+              <TextArea placeholder="填写我的解决方案" value={this.state.addSolutionData.content} onChange={this.onAddSolutionContentChange}></TextArea><br/>
+              <Button onClick={this.onAddSolutionSubmit}>提交</Button>
+            </div>
+          }
+
+          {this.state.solutionList.map( x => 
+            <Solution data={x} key={x.id}></Solution>
+          )}
+
+          {this.state.hasSolution === false && this.state.addSolution === false && 
+            <div className="problem-solutio__not-have">
+              还没有解决方案，需要你的超能力<br/>
+              <Button onClick={this.onShowAddSolution}>写我的解决方案</Button>
+            </div>
+          }
+          
+          {this.state.hasSolution === true && 
+            <div>
+              {this.state.hasSolutionMore && 
+                <Button onClick={this.getSolutionList}>查看更多解决方案</Button>
+              }      
+              {!this.state.hasSolutionMore && 
+                <Button >没有更多解决方案了</Button>
+              } 
+            </div>
+          }
+        </div>
       </React.Fragment>
     )
   }

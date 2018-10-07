@@ -11,8 +11,13 @@ class Page extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      problemType: 'join', // join or star
-      userData: {}
+      problemType: '', // join or star
+      userData: {},
+      problemList: {
+        create: undefined,
+        star: undefined,
+        join: undefined
+      }
     };
   }
 
@@ -30,11 +35,22 @@ class Page extends React.Component {
         Router.push('/login');
       }
     });
+
+    this.onProblemTypeChange('create');
   }
 
+  // create star join
   onProblemTypeChange = (type) => {
-    this.setState({ problemType: type })
+    this.setState({ problemType: type });
+    if (!this.state.problemList[type]) {
+      console.log(type);
+      api.authGetMyProblem({ type }).then(res => {
+        this.state.problemList[type] = res.data;
+        this.setState({ problemList: this.state.problemList })
+      });
+    }
   }
+
 
   render() {
     let userData = this.state.userData;
@@ -57,12 +73,14 @@ class Page extends React.Component {
 
           <div className="my_problems">
             <ul className="my_problems-tab">
+              <li className={this.state.problemType === 'create' ? 'sel' : undefined} onClick={() => this.onProblemTypeChange('create')}>创建的问题</li>
               <li className={this.state.problemType === 'join' ? 'sel' : undefined} onClick={() => this.onProblemTypeChange('join')}>参与的问题</li>
               <li className={this.state.problemType === 'star' ? 'sel' : undefined} onClick={() => this.onProblemTypeChange('star')}>关注的问题</li>
             </ul>
             <ul className="my_problems-list">
-              <li><a>聚会或一起时候，矿泉水瓶子总是分不清谁是谁的？</a></li>
-              <li><a>聚会或一起时候，矿泉水瓶子总是分不清谁是谁的？</a></li>
+              { this.state.problemList[this.state.problemType] && this.state.problemList[this.state.problemType].map(item => 
+                <li><a>{item.title}</a></li>
+              )}
             </ul>
           </div>
         </div>

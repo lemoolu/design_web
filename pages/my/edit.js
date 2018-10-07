@@ -2,11 +2,12 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import { Header } from 'app/containers';
-import { Button } from 'app/components';
 import api from 'app/api';
 import Link from 'next/link';
 import Router from 'next/router';
-import { Input, Row, Col, Form, Icon, Upload, message } from 'antd';
+import { UploadImg } from 'app/components';
+import { Input, Row, Col, Form, Icon, Upload, message, Button } from 'antd';
+
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
@@ -33,7 +34,13 @@ function beforeUpload(file) {
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      formData: {
+        introduction: '',
+        job: '',
+        avatar: '',
+      },
+    };
   }
 
   static async getInitialProps({ Component, router, ctx }) {
@@ -44,18 +51,33 @@ class Page extends React.Component {
     this.props.actions.setTitle('编辑个人信息');
   }
 
-  handleChange = (info) => {
-    if (info.file.status === 'uploading') {
-      this.setState({ loading: true });
-      return;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userData) {
+      this.setState({ formData: nextProps.userData });
     }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => this.setState({
-        imageUrl,
-        loading: false,
-      }));
-    }
+  }
+
+  handleChange = (key, value) => {
+    console.log(value)
+    let formData = this.state.formData;
+    formData[key] = value;
+    this.setState(formData);
+  }
+
+  onSubmit = () => {
+    console.log(this.state.formData);
+    api.authInfoUpdate(this.state.formData).then(res => {
+      if (res.status === 'success') {
+        message.success('信息修改成功');
+        setTimeout(() => {
+          Router.push({
+            pathname: '/my',
+          })
+        }, 2000);
+      } else {
+        message.error(res.message);
+      }
+    });
   }
 
 
@@ -69,7 +91,7 @@ class Page extends React.Component {
       },
     };
 
-    const imageUrl = this.state.imageUrl;
+    const imageUrl = _.get(this.state, 'formData.avatar');
 
     const uploadButton = (
       <div>
@@ -78,35 +100,34 @@ class Page extends React.Component {
       </div>
     );
 
-
     return (
       <React.Fragment>
         <div className="my__edit">
           <h1 style={{marginBottom: 30}}>编辑个人信息</h1>
           <FormItem {...formItemLayout} label="描述">
-            <TextArea  placeholder="描述"></TextArea>
+            <TextArea  placeholder="描述" 
+              value={this.state.formData.introduction} 
+              onChange={e => this.handleChange('introduction', e.target.value)}
+            >
+            </TextArea>
           </FormItem>
           <FormItem {...formItemLayout}  label="职位">
-            <Input placeholder="职位"></Input>
+            <Input placeholder="职位"
+              value={this.state.formData.job} 
+              onChange={e => this.handleChange('job', e.target.value)}
+            ></Input>
           </FormItem>
           <FormItem {...formItemLayout}  label="头像">
-            <Upload
-              name="avatar"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              action="/api/upload"
-              beforeUpload={beforeUpload}
-              onChange={this.handleChange}
+            <UploadImg
+              onChange={url => this.handleChange('avatar', url)}
             >
-              {imageUrl ? <img src={imageUrl} alt="avatar" /> : uploadButton}
-            </Upload>
+              {imageUrl ? <img src={imageUrl} alt="avatar" width="100"/> : uploadButton}
+            </UploadImg>
           </FormItem>
-          <form action="/api/upload" method="post" enctype="multipart/form-data">
-              <input type="file" name="upload" multiple="multiple"/>
-              <br />
-              <button type="submit">Upload</button>
-          </form>
+          <FormItem wrapperCol={{offset: 2}}>
+            <Button onClick={this.onSubmit}>保存</Button>
+          </FormItem>
+          
         </div>
 
       </React.Fragment>

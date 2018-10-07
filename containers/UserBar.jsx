@@ -16,6 +16,7 @@ class UserBar extends React.Component {
   }
 
   static defaultProps = {
+    data: {},
     type: 'info', // info 默认模式，包含头像；from使用来自
     infos: [],
   }
@@ -26,15 +27,17 @@ class UserBar extends React.Component {
       classNames.push(this.props.className);
     }
 
+    const userData = this.props.data;
+
     return (
       <div className={classNames.join(' ')}>
         {this.props.type === 'info' && 
           <div className="ctn-userbar__avator">
-            <img src="" alt=""/>
+            <img src={userData.avatar} alt=""/>
           </div>
         }
 
-        <div className="ctn-userbar__name">{this.props.type === 'from' && <span>来自 </span>} Kenneth Walsh</div>
+        <div className="ctn-userbar__name">{this.props.type === 'from' && <span>来自 </span>} {userData.name}</div>
         <div className="ctn-userbar__other">
           {this.props.infos.map(x => 
             <span className="ctn-userbar__info">{x}</span>

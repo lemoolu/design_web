@@ -12,6 +12,7 @@ export default class MyDocument extends Document {
         </Head>
         <body>
           <Main />
+          <script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
           <NextScript />
         </body>
       </html>

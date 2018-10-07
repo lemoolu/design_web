@@ -4,6 +4,7 @@ class Input extends React.Component {
   componentDidMount() {}
 
   static defaultProps = {
+    style: undefined,
     placeholder: undefined,
     value: undefined,
     onChange: undefined,
@@ -18,7 +19,7 @@ class Input extends React.Component {
     }
 
     return (
-      <div className={classNames.join(' ')}>
+      <div className={classNames.join(' ')} style={this.props.style}>
         <input 
           type={this.props.type} 
           placeholder={this.props.placeholder} 

@@ -1,10 +1,10 @@
 import React from 'react';
+import { message } from 'antd';
 
-function message() {
-
-}
 
 export default {
-  error: function(msg) { console.log(msg) },
+  error: function(msg) {
+    message.error(msg);
+  },
   loading: function() {}
 };

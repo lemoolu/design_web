@@ -5,7 +5,8 @@ import { Header } from 'app/containers';
 import { Input, Button } from 'app/components';
 import api from 'app/api';
 import schema from 'async-validator';
-import { withRouter } from 'next/router'
+import { withRouter } from 'next/router';
+import Link from 'next/link';
 
 const descriptor = {
   phone: [
@@ -75,6 +76,10 @@ class Page extends React.Component {
             <Input value={formData.password} onChange={e => this.onFormItemChange(e.target.value, 'password')} type="password" placeholder="密码"/>
             <div className="login__form-err-msg">{this.state.errorMsg}</div>
             <Button className="login__form-btn" size="large" type="primary" onClick={this.onSubmit}>登录</Button>
+            <div>
+              
+            <Link href="/signup"><a>跳转到注册页面</a></Link>
+            </div>
           </div>
         </div> 
       </React.Fragment>

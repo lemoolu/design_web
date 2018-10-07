@@ -99,11 +99,16 @@
 .ctn-problem {
   position: relative;
   height: 150px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   padding-right: 170px;
+  cursor: pointer;
+  &:hover {
+    background: #f9f9f9;
+  }
   .ctn-problem__head {
-    height: 30px;
-    line-height: 30px;
+    height: 20px;
+    line-height: 20px;
+    margin-bottom: 10px;
   }
   .ctn-problem__rate {
     font-size: 14px;
@@ -115,16 +120,18 @@
     float: right;
   }
   .ctn-problem__title {
+    height: 24px;
     display: block;
-    margin: 0;
-    padding: 0;
+    margin-bottom: 5px;
     font-size: 18px;
     color: #282828;
   }
   .ctn-problem__main {
+    height: 40px;
     font-size: 14px;
     color: #757575;
     margin-bottom: 10px;
+    overflow: hidden;
   }
   .ctn-problem__user-star {
     text-align: right;
@@ -136,6 +143,9 @@
     right: 0;
     top: 0;
     background-color: #eee;
+    img {
+      width: 100%;
+    }
   }
 }
 
@@ -166,4 +176,8 @@
   span.ctn-userbar__info {
     margin-right: 30px;
   }
+}
+
+.ctn-comment{
+  padding-left: 20px;
 }
