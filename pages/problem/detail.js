@@ -18,9 +18,7 @@ class Page extends React.Component {
     this.state = {
       problemId: props.id,
       problemData: {},
-      addSolutionData: {
-        content: ''
-      },
+      addSolutionContent: '',
       solutionListPage: 1,
       solutionList: [],
       addSolution: false,
@@ -57,7 +55,7 @@ class Page extends React.Component {
   }
 
   getSolutionList = () => {
-    api.solutionList({ problem_id: this.state.problemId, page: this.state.solutionListPage, pageSize: 3 }).then(res => {
+    api.solutionList({ problem_id: this.state.problemId, page: this.state.solutionListPage, pageSize: 5 }).then(res => {
       let solutionList = this.state.solutionList;
       solutionList = solutionList.concat(res.data.list);
       this.setState({
@@ -96,13 +94,11 @@ class Page extends React.Component {
   }
 
   onAddSolutionContentChange = (e) => {
-    let addSolutionData = this.state.addSolutionData;
-    addSolutionData.content = e.target.value;
-    this.setState({ addSolutionData })
+    this.setState({ addSolutionContent: e.target.value })
   }
 
   onAddSolutionSubmit = () => {
-    api.solutionAdd({ ...this.state.addSolutionData, problem_id: this.state.problemId }).then(res => {
+    api.solutionAdd({ content: this.state.addSolutionContent, problem_id: this.state.problemId }).then(res => {
       message.success('解决方案添加成功');
       api.solutionList({ problem_id: this.state.problemId, page: 1, pageSize: 5 }).then(res => {
         let solutionList = res.data.list;
@@ -114,6 +110,7 @@ class Page extends React.Component {
       });
       this.setState({
         addSolution: false,
+        addSolutionContent: ''
       });
     });
   }
@@ -149,6 +146,9 @@ class Page extends React.Component {
           <div className="problem-detail__main">
             {problemData.content}
           </div>
+          <div className="problem-detail__main-img">
+            <img src={problemData.image} alt=""/>
+          </div>
           <UserBar data={problemData.user_data}>
             <div className="problem-detail__user">
               <span>发布于 {problemData.created_at}</span>
@@ -164,7 +164,7 @@ class Page extends React.Component {
 
           {this.state.addSolution === true && 
             <div>
-              <TextArea placeholder="填写我的解决方案" value={this.state.addSolutionData.content} onChange={this.onAddSolutionContentChange}></TextArea><br/>
+              <TextArea placeholder="填写我的解决方案" value={this.state.addSolutionContent} onChange={this.onAddSolutionContentChange}></TextArea><br/>
               <Button onClick={this.onAddSolutionSubmit}>提交</Button>
             </div>
           }

@@ -64,8 +64,9 @@ class Solution extends React.Component {
   onAddCommentSubmit = () => {
     api.commentAdd({ solution_id: this.props.data.id, content: this.state.addCommentValue }).then(res => {
       message.success('评论添加成功');
-      this.setState({ addComment: false });
+      this.setState({ addComment: false, addCommentValue: '' });
       this.onGetComments();
+      this.onShowAll();
     });
   }
 
@@ -97,7 +98,7 @@ class Solution extends React.Component {
             <Button onClick={this.onAddCommentSubmit}>提交</Button>
           </div>
         }
-        
+
         <div className="problem-solution__item-bar">
           <a className="updata">上传原型图</a>
           <a className="discuss" onClick={this.onShowAdd}>讨论</a>
