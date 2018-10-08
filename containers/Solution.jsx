@@ -80,10 +80,6 @@ class Solution extends React.Component {
         <UserBar data={data.user_data}> {data.created_at}</UserBar>
         <div className="problem-solution__item-main">
           {data.content}
-        发斯蒂芬斯蒂芬斯蒂芬斯蒂芬是否对方水电费地方第三方第三方士大夫是否发士大夫撒发顺丰撒发顺丰沙发沙发沙发沙发沙发沙发发
-        发斯蒂芬斯蒂芬斯蒂芬斯蒂芬是否对方水电费地方第三方第三方士大夫是否发士大夫撒发顺丰撒发顺丰沙发沙发沙发沙发沙发沙发发
-        发斯蒂芬斯蒂芬斯蒂芬斯蒂芬是否对方水电费地方第三方第三方士大夫是否发士大夫撒发顺丰撒发顺丰沙发沙发沙发沙发沙发沙发发
-        发斯蒂芬斯蒂芬斯蒂芬斯蒂芬是否对方水电费地方第三方第三方士大夫是否发士大夫撒发顺丰撒发顺丰沙发沙发沙发沙发沙发沙发发
         </div>
         <div className="problem-solution__item-more"><a onClick={this.onShowAll}>展开阅读全文</a></div>
 

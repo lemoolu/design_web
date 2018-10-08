@@ -7,8 +7,10 @@ const app = next({ dev })
 const handle = app.getRequestHandler()
 const proxy = require('http-proxy-middleware');
 
+console.log(port)
+
 const proxyOptions = {
-  target: 'http://127.0.0.1:7001',
+  target: 'http://127.0.0.1:8000',
   changeOrigin: true,
 }
 

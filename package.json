@@ -6,8 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "cross-env NODE_ENV=production node server.js",
-    "server": "npm run build && pm2 start process.json --env production",
+    "start-default": "cross-env NODE_ENV=production node server.js",
+    "start": "npm run stop && npm run build && pm2 start process.json --env production ",
     "stop": "pm2 stop all"
   },
   "author": "",
