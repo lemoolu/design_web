@@ -20,4 +20,23 @@ export default {
   commentAdd: { method: 'post', url: '/api/comment' },
   commentList: { method: 'get', url: '/api/comment/list' },
 
+
+  adminLogin: { method: 'post', url: '/api/admin/login' },
+  adminInfo: { method: 'get', url: '/api/admin/auth/info' },
+  adminProblemList: { method: 'get', url: '/api/admin/problem/list' },
+  adminProblemVeify: { method: 'post', url: '/api/admin/problem/verify' },
+
+  adminSolutionList: { method: 'get', url: '/api/admin/solution/list' },
+  adminSolutionVerify: { method: 'post', url: '/api/admin/solution/verify' },
+
+  adminCommentList: { method: 'get', url: '/api/admin/comment/list' },
+  adminCommentVerify: { method: 'post', url: '/api/admin/comment/verify' },
+
+  adminUserList: { method: 'get', url: '/api/admin/user/list' },
+
+  adminStoryAdd: { method: 'post', url: '/api/admin/story' },
+  adminStoryDetail: { method: 'get', url: '/api/admin/story' },
+  adminStoryDel: { method: 'delete', url: '/api/admin/story' },
+  adminStoryUpdate: { method: 'put', url: '/api/admin/story' },
+  adminStoryList: { method: 'get', url: '/api/admin/story/list' },
 };

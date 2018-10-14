@@ -25,6 +25,8 @@ export default class MyApp extends App {
         setTitle: this.setTitle
       }
     };
+
+    console.log(props.router.pathname);
   }
 
   // 设置标题
@@ -54,7 +56,9 @@ export default class MyApp extends App {
     const { Component, pageProps, userData } = this.props
     return (
       <Container>
-        <Header title={this.state.title} userData={this.state.userData}/>
+        {!/\/admin/.test(this.props.router.pathname) &&
+          <Header title={this.state.title} userData={this.state.userData}/>
+        }
         <div className="container">
           <Component {...pageProps} userData={this.state.userData} actions={this.state.actions} />
         </div>

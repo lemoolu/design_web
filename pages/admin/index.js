@@ -8,10 +8,10 @@ import schema from 'async-validator';
 import { withRouter } from 'next/router';
 import Link from 'next/link';
 
+
 const descriptor = {
   phone: [
-    { type: "string", required: true, message: '请填写手机号' },
-    { pattern: /^1[34578]\d{9}$/, message: '请填写正确的手机号' },
+    { type: "string", required: true, message: '请填写账户' },
   ],
   password: [
     { type: "string", required: true, message: '请填写密码' },
@@ -26,15 +26,19 @@ class Page extends React.Component {
     super(props);
     this.state = {
       formData: {
-        phone: '',
-        password: '',
+        phone: '18768177573',
+        password: '123456',
       },
       errorMsg: null,
     };
   }
 
+  static async getInitialProps({ Component, router, ctx }) {
+    return {};
+  }
+
   componentDidMount() {
-    this.props.actions.setTitle('登录');
+    this.props.actions.setTitle('管理平台');
   }
 
   onFormItemChange = (value, key) => {
@@ -47,7 +51,7 @@ class Page extends React.Component {
   onLoginSuccess = () => {
     // this.props.router.push('/');
     // location.reload();
-    location.href = '/'
+    location.href = '/admin/problem'
   }
 
   onSubmit = () => {
@@ -55,7 +59,7 @@ class Page extends React.Component {
       if (errors) {
         this.setState({ errorMsg: _.get(errors, '[0].message') });
       } else {
-        api.authLogin(this.state.formData).then(res => {
+        api.adminLogin(this.state.formData).then(res => {
           if (res.status !== 'success') {
             this.setState({ errorMsg: res.message });
           } else {
@@ -71,20 +75,16 @@ class Page extends React.Component {
     return (
       <div className="login">
         <div className="login__title">“用设计解决这个世界上的小问题”</div>
-        <div className="login__sub-title">欢迎</div>
+        <div className="login__sub-title">管理员登录</div>
         <div className="login__form">
           <Input value={formData.phone} onChange={e => this.onFormItemChange(e.target.value, 'phone')} placeholder="手机号"/>
           <Input value={formData.password} onChange={e => this.onFormItemChange(e.target.value, 'password')} type="password" placeholder="密码"/>
           <div className="login__form-err-msg">{this.state.errorMsg}</div>
           <Button className="login__form-btn" size="large" type="primary" onClick={this.onSubmit}>登录</Button>
-          <div>
-            
-          <Link href="/signup"><a>跳转到注册页面</a></Link>
-          </div>
         </div>
-      </div> 
+      </div>
     )
   }
 }
 
-export default withRouter(Page);
+export default Page

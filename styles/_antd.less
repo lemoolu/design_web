@@ -1,6 +1,7 @@
-.ant-btn {
+.ant-btn.ant-btn-primary {
   color: @color-primary;
   border-color: @color-primary;
+
   &:hover,
   &:active,
   &:focus {
@@ -10,10 +11,17 @@
 }
 
 .anticon {
-  &:before{
-    
+  &:before {
+    // display: none;;
   }
+
   svg {
     display: none !important;
+  }
+}
+
+.ant-pagination-item-link {
+  i {
+    display: none;
   }
 }

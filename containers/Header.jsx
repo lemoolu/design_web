@@ -3,6 +3,7 @@ import Head from 'next/head';
 import api from 'app/api';
 import Link from 'next/link';
 import Router from 'next/router';
+import { withRouter } from 'next/router'
 
 
 class Header extends React.Component {
@@ -15,6 +16,7 @@ class Header extends React.Component {
 
   componentDidMount() {
     this.setMenuItemSel();
+        console.log(this.props.router);
   }
 
   componentDidUpdate(prevProps, prevState) {
