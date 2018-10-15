@@ -81,7 +81,7 @@ class Page extends React.Component {
       { title: '内容', dataIndex: 'content' },
       { title: '发布时间', dataIndex: 'created_at' },
       {
-        title: '操作',
+        title: '状态',
         dataIndex: 'status',
         width: 100,
         render: (status, record) => {
@@ -91,12 +91,18 @@ class Page extends React.Component {
             </Tooltip>;
           }
           if (status === true) {
-            return <span>
-              <Tooltip placement="top" title={record.verify_msg}>
+            return <Tooltip placement="top" title={record.verify_msg}>
                 <Tag color="green">通过</Tag>
-              </Tooltip>
-            </span>;
+              </Tooltip>;
           }
+          return '未审核';
+        }
+      },
+      {
+        title: '操作',
+        dataIndex: 'operate',
+        width: 100,
+        render: (status, record) => {
           return <span><Button onClick={() => this.onShowVerify(record)}>审核</Button></span>;
         }
       },
@@ -127,6 +133,7 @@ class Page extends React.Component {
           <Button onClick={this.onFilterGet}>查询</Button>
         </div>
         <TableEx 
+          rowKey="id"
           api={api.adminSolutionList}
           history={this.state.history}
           columns={columns}

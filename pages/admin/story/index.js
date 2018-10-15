@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { AdminLayout } from 'app/containers';
+import { AdminLayout, Editor } from 'app/containers';
 import api from 'app/api';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -31,6 +31,7 @@ class Page extends React.Component {
   componentDidMount() {
     this.props.actions.setTitle('管理平台');
     this.getTableList();
+
   }
 
 
@@ -84,26 +85,29 @@ class Page extends React.Component {
 
   onAddSubmit = () => {
     console.log(this.state.addData);
-    if (!this.state.addData.id) {
-      api.adminStoryAdd(this.state.addData).then(res => {
-        message.success('故事添加成功');
-        this.onHideModal();
-        this.getTableList();
-      });
-    } else {
-      api.adminStoryUpdate(this.state.addData).then(res => {
-        message.success('故事编辑成功');
-        this.onHideModal();
-        this.getTableList();
-      });
+    let action = api.adminStoryAdd;
+    let successMsg = '故事添加成功';
+    if (this.state.addData.id) {
+      action = api.adminStoryUpdate;
+      successMsg = '故事编辑成功';
     }
+    action(this.state.addData).then(res => {
+      if (res.status !== 'success') {
+        message.warning(res.message);
+        return;
+      }
+      message.success(successMsg);
+      this.onHideModal();
+      this.getTableList();
+      this.setState({ addData: {} })
+    });
   }
 
   render() {
     const columns = [
       { title: 'ID', dataIndex: 'id' },
-      { title: '名称', dataIndex: 'title' },
-      { title: '发布人', dataIndex: 'user_data.name' },
+      { title: '标题', dataIndex: 'title' },
+      // { title: '发布人', dataIndex: 'user_data.name' },
       { title: '发布时间', dataIndex: 'created_at' },
       {
         title: '操作',
@@ -152,6 +156,7 @@ class Page extends React.Component {
           <Button onClick={() => this.onShowModal()} type="primary" >添加</Button>
         </div>
         <TableEx 
+          rowKey="id"
           api={api.adminStoryList}
           history={this.state.history}
           columns={columns}
@@ -161,7 +166,7 @@ class Page extends React.Component {
 
         <Modal title="添加故事"
           visible={this.state.visible} 
-          width={600} 
+          width={1000} 
           onCancel={this.onHideModal}
           onOk={this.onAddSubmit}
         >
@@ -171,21 +176,20 @@ class Page extends React.Component {
               style={{marginTop: 20}} 
               value={this.state.addData.title} 
               onChange={e => this.handleChange('title', e.target.value)}
-            >
-            </Input>
+            />
+            <Editor 
+              value={this.state.addData.content}
+              onChange={v => this.handleChange('content', v)}
+            />
+            {
+            //            <UploadImg
+            //   onChange={url => this.handleChange('image', url)}
+            //   action="/api/admin/upload"
+            // >
+            //   {image ? <img src={image} alt="avatar" style={{maxWidth: 400}}/> : uploadButton}
+            // </UploadImg>   
+            }
 
-            <div style={{textAlign: 'left', marginBottom: 20}} id="editor"></div>
-            <TextArea style={{marginBottom: 20}} 
-              placeholder="故事内容"
-              value={this.state.addData.content} 
-              onChange={e => this.handleChange('content', e.target.value)}
-            ></TextArea>
-            <UploadImg
-              onChange={url => this.handleChange('image', url)}
-              action="/api/admin/upload"
-            >
-              {image ? <img src={image} alt="avatar" style={{maxWidth: 400}}/> : uploadButton}
-            </UploadImg>
           </Row>
         </Modal>
       </AdminLayout>

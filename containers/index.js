@@ -4,3 +4,5 @@ export Banner from './Banner.jsx';
 export UserBar from './UserBar.jsx';
 export Solution from './Solution.jsx';
 export AdminLayout from './AdminLayout.jsx';
+export UserCard from './UserCard.jsx';
+export Editor from './Editor.jsx';

@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { AdminLayout } from 'app/containers';
+import { AdminLayout, UserCard } from 'app/containers';
 import api from 'app/api';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -88,14 +88,14 @@ class Page extends React.Component {
     const columns = [
       { title: 'ID', dataIndex: 'id' },
       { title: '名称', dataIndex: 'title' },
-      { title: '发布人', dataIndex: 'user_data.name' },
+      { title: '发布人', dataIndex: 'user_data', render: data => <UserCard data={data}/> },
       { title: '方案数', dataIndex: 'solution_count' },
       { title: '原型数', dataIndex: '' },
       { title: '收藏数', dataIndex: 'star_count' },
       { title: '浏览数', dataIndex: 'visit_count' },
       { title: '发布时间', dataIndex: 'created_at' },
       {
-        title: '操作',
+        title: '状态',
         dataIndex: 'status',
         width: 100,
         render: (status, record) => {
@@ -105,12 +105,18 @@ class Page extends React.Component {
             </Tooltip>;
           }
           if (status === true) {
-            return <span>
-              <Tooltip placement="top" title={record.verify_msg}>
+            return <Tooltip placement="top" title={record.verify_msg}>
                 <Tag color="green">通过</Tag>
-              </Tooltip>
-            </span>;
+              </Tooltip>;
           }
+          return '未审核';
+        }
+      },
+      {
+        title: '操作',
+        dataIndex: 'operate',
+        width: 100,
+        render: (status, record) => {
           return <span><Button onClick={() => this.onShowVerify(record)}>审核</Button></span>;
         }
       },
@@ -141,6 +147,7 @@ class Page extends React.Component {
           <Button onClick={this.onFilterGet}>查询</Button>
         </div>
         <TableEx 
+          rowKey="id"
           api={api.adminProblemList}
           history={this.state.history}
           columns={columns}

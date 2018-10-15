@@ -39,4 +39,7 @@ export default {
   adminStoryDel: { method: 'delete', url: '/api/admin/story' },
   adminStoryUpdate: { method: 'put', url: '/api/admin/story' },
   adminStoryList: { method: 'get', url: '/api/admin/story/list' },
+
+  adminInvitecodeList: { method: 'get', url: '/api/admin/invitecode/list' },
+  adminInvitecodeGen: { method: 'post', url: '/api/admin/invitecode/gen' },
 };
