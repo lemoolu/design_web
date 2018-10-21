@@ -6,6 +6,7 @@ import { UploadImg, needLogin } from 'app/components';
 import api from 'app/api';
 import { Input, Button, message, Icon } from 'antd';
 import Router from 'next/router';
+import qs from 'qs';
 
 const TextArea = Input.TextArea;
 
@@ -50,7 +51,25 @@ class Page extends React.Component {
     ]
     // editor.create();
     this.editor = editor;
+
+
+    this.setState({
+      id: _.get(qs.parse(window.location.search.replace('?', '')), 'id')
+    }, () => {
+      this.editInit();
+    })
   }
+
+  editInit = () => {
+    if (!this.state.id) {
+      return;
+    }
+    console.log(this.state.id);
+    api.problemDetail({ id: this.state.id }).then(res => {
+      this.setState({ formData: res.data });
+    });
+  }
+
 
   handleChange = (key, value) => {
     let formData = this.state.formData;
@@ -62,16 +81,23 @@ class Page extends React.Component {
   onSubmit = () => {
     const formData = this.state.formData
     if (formData.title === '') {
-      alert('请填写问题标题');
+      message.warn('请填写问题标题');
       return;
     }
-    if (formData.title === '') {
-      alert('请填写问题标题');
+    if (formData.title.length > 24) {
+      message.warn('问题标题不能超多24个字符');
+      return;
+    }
+    if (formData.content === '') {
+      message.warn('请填写问题内容');
       return;
     }
     console.log(formData);
-    api.problemAdd(formData).then(res => {
-      console.log(res);
+    let action = api.problemAdd;
+    if (this.state.id) {
+      action = api.problemUpdate;
+    }
+    action(formData).then(res => {
       if (res.status === 'success') {
         message.success('发布问题成功');
         setTimeout(() => {
@@ -97,7 +123,7 @@ class Page extends React.Component {
 
     return (
       <div className="problem-add">
-        <h1>发布问题</h1>
+        <h1>{this.state.id ? '编辑问题' : '发布问题'}</h1>
         <Input 
           placeholder="填写你认为需要被解决的问题标题" 
           style={{marginTop: 20}} 
@@ -107,7 +133,9 @@ class Page extends React.Component {
         </Input>
 
         <div style={{textAlign: 'left', marginBottom: 20}} id="editor"></div>
-        <TextArea style={{marginBottom: 20}} 
+        <TextArea 
+          style={{marginBottom: 20}} 
+          rows={8}
           value={this.state.formData.content} 
           onChange={e => this.handleChange('content', e.target.value)}
         ></TextArea>
@@ -116,7 +144,7 @@ class Page extends React.Component {
         >
           {image ? <img src={image} alt="avatar" style={{maxWidth: 400}}/> : uploadButton}
         </UploadImg>
-        <Button style={{marginTop: '20px'}} onClick={this.onSubmit}>发布</Button>
+        <Button style={{marginTop: '20px', minWidth: 80}} onClick={this.onSubmit} size="large">发布</Button>
       </div>
     )
   }

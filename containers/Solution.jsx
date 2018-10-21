@@ -22,9 +22,10 @@ class Solution extends React.Component {
   }
 
   static async getInitialProps({ Component, router, ctx }) {
-    return {};
+    return {
+      userData: null
+    };
   }
-
 
   onVote = () => {
     api.solutionVote({
@@ -36,7 +37,7 @@ class Solution extends React.Component {
         data.vote_count += 1;
         this.setState({ data })
       } else {
-        message.error(res.message);
+        message.error('请坚定你的立场哦~');
       }
     });
   }
@@ -46,8 +47,10 @@ class Solution extends React.Component {
     this.onGetComments();
   }
 
-
   onGetComments = () => {
+    if (this.state.commentList.length > 0) {
+      return;
+    }
     api.commentList({ solution_id: this.props.data.id, pageSize: 999999 }).then(res => {
       this.setState({ commentList: res.data.list });
     });
@@ -56,54 +59,102 @@ class Solution extends React.Component {
   onShowAdd = () => {
     this.setState({ addComment: true });
   }
-
+  onAddCommentCancel = () => {
+    this.setState({ addComment: false });
+  }
+  onShowCommentList = () => {
+    this.onGetComments();
+    this.setState({ isShowComment: true })
+  }
+  onHideCommentList = () => {
+    this.setState({ isShowComment: false })
+  }
   onAddCommentChange = (e) => {
     this.setState({ addCommentValue: e.target.value })
   }
-
   onAddCommentSubmit = () => {
     api.commentAdd({ solution_id: this.props.data.id, content: this.state.addCommentValue }).then(res => {
       message.success('评论添加成功');
       this.setState({ addComment: false, addCommentValue: '' });
       this.onGetComments();
-      this.onShowAll();
     });
+  }
+
+  onEditSolution = () => {
+    this.props.onEdit && this.props.onEdit(this.props.data);
   }
 
   render() {
     const data = this.props.data || {};
+    let content = data.content + '';
+    let hasMore = true;
     let classNames = ['problem-solution__item'];
     if (this.state.showAll) {
       classNames.push('problem-solution__item-all')
     }
+    if (!this.state.showAll && content.length > 210) {
+      content = content.slice(0, 210) + '...';
+    } else {
+      hasMore = false;
+    }
+
     return (
       <div className={classNames.join(' ')}>
-        <UserBar data={data.user_data}> {data.created_at}</UserBar>
+        <UserBar data={data.user_data}>
+          {data.created_at} 
+          {_.get(this.props.userData, 'id') === data.user_id && 
+            <a className="problem-solution__item-edit" onClick={this.onEditSolution}>编辑</a>}
+        </UserBar>
         <div className="problem-solution__item-main">
-          {data.content}
+          {content}
+          <br/>
+          {data.image && <img src={data.image} alt=""/>}
         </div>
-        <div className="problem-solution__item-more"><a onClick={this.onShowAll}>展开阅读全文</a></div>
-
-        {this.state.showAll && 
-          this.state.commentList.map(x => 
-            <CommentCard data={x} key={x.id} />
-          )
-        }
-        {this.state.showAll && this.state.commentList.length === 0 && 
-          <div className="problem-solution__item-no-comment">- 没有评论 -</div>
-        }
-        {this.state.addComment === true && 
-          <div>
-            <TextArea placeholder="添加评论" value={this.state.addCommentValue} onChange={this.onAddCommentChange}></TextArea><br/>
-            <Button onClick={this.onAddCommentSubmit}>提交</Button>
-          </div>
+        {hasMore && 
+          <div className="problem-solution__item-more"><a onClick={this.onShowAll}>展开阅读全文</a></div>
         }
 
         <div className="problem-solution__item-bar">
-          <a className="updata">上传原型图</a>
-          <a className="discuss" onClick={this.onShowAdd}>讨论</a>
+          {!this.state.isShowComment && 
+            <a className="discuss" onClick={this.onShowCommentList}>讨论({data.comment_count})</a>
+          }
+          {this.state.isShowComment && 
+            <a className="discuss" onClick={this.onHideCommentList}>收起讨论</a>
+          }
+          
           <a className="vote" onClick={this.onVote}>投票({data.vote_count})</a>
         </div>
+
+        {this.state.isShowComment && 
+          <div>
+            {this.props.userData && 
+              <div style={{padding: '10px 50px'}}>
+                <UserBar data={this.props.userData}><a onClick={this.onShowAdd}>我要评论</a></UserBar>
+              </div>
+            }
+            {this.state.addComment === true && 
+              <div>
+                <TextArea 
+                  placeholder="添加评论" 
+                  value={this.state.addCommentValue} 
+                  onChange={this.onAddCommentChange} 
+                  style={{marginBottom: 4}}
+                />
+                <br/>
+                <Button onClick={this.onAddCommentSubmit} type="primary">提交</Button>&nbsp;
+                <Button onClick={this.onAddCommentCancel}>取消</Button>
+              </div>
+            }
+
+            {this.state.commentList.map(x => 
+              <CommentCard data={x} key={x.id} />
+            )}
+            {this.state.commentList.length === 0 && 
+              <div className="problem-solution__item-no-comment">- 没有人评论 -</div>
+            }
+          </div>
+        }
+
       </div>
     )
   }

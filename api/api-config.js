@@ -14,11 +14,16 @@ export default {
   problemStar: { method: 'post', url: '/api/problem/star' },
 
   solutionAdd: { method: 'post', url: '/api/solution' },
+  solutionEdit: { method: 'put', url: '/api/solution' },
   solutionList: { method: 'get', url: '/api/solution/list' },
   solutionVote: { method: 'post', url: '/api/solution/vote' },
 
   commentAdd: { method: 'post', url: '/api/comment' },
   commentList: { method: 'get', url: '/api/comment/list' },
+
+
+  storyList: { method: 'get', url: '/api/admin/story/list' },
+  storyDetail: { method: 'get', url: '/api/admin/story' },
 
 
   adminLogin: { method: 'post', url: '/api/admin/login' },

@@ -6,11 +6,11 @@ import { Input, Button } from 'app/components';
 import api from 'app/api';
 import Router from 'next/router';
 
-function StoryCard() {
+function StoryCard({ index, data }) {
   return (
     <div className="home__storys-card">
-      <div className="home__storys-card-index">01</div>
-      孩子学校教了垃圾分类，但是孩子的爸爸妈妈总是不知道垃圾应该分类，也不重视，如何解决问题？
+      <div className="home__storys-card-index">0{index}</div>
+      <div dangerouslySetInnerHTML={{__html: data.content}} />
     </div>
   )
 }
@@ -22,6 +22,7 @@ class Page extends React.Component {
       page: 1,
       hasMore: true,
       problemList: [],
+      storyList: []
     };
   }
 
@@ -32,6 +33,7 @@ class Page extends React.Component {
   componentDidMount() {
     this.props.actions.setTitle('首页');
     this.getMoreProblem();
+    this.getStoryList();
     // this.onLinkDetail(101);
   }
 
@@ -56,6 +58,11 @@ class Page extends React.Component {
   }
 
 
+  getStoryList = () => {
+    api.storyList().then(res => {
+      this.setState({ storyList: res.data.list })
+    });
+  }
 
 
   render() {
@@ -81,10 +88,9 @@ class Page extends React.Component {
           </div>
           <div className="home__storys">
             <h2 className="home__content-subtitle">故事/Story</h2>
-            <StoryCard></StoryCard>
-            <StoryCard></StoryCard>
-            <StoryCard></StoryCard>
-            <StoryCard></StoryCard>
+            {this.state.storyList.map((x, index) => 
+              <StoryCard data={x} index={index+1}/>
+            )}
           </div>
         </div>
       </React.Fragment>

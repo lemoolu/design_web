@@ -5,12 +5,15 @@ import { Header, UserBar } from 'app/containers';
 import { Input, Button } from 'app/components';
 import api from 'app/api';
 
-function StoryCard() {
+function StoryCard({ data }) {
   return (
     <div className="story__card">
-      <div className="story__card-img"></div>
-      <p>孩子学校教了垃圾分类，但是孩子的爸爸妈妈总是不知道垃圾应该分类，也不重视，如何解决问题？</p>
-      <UserBar type="from" infos={['发布于2018.10.21', '12919次浏览']}>
+      <div className="story__card-img">
+        {data.image && <img src={data.image} alt=""/>}
+      </div>
+      <h2>{data.title}</h2>
+      <div className="story__card-content" dangerouslySetInnerHTML={{__html: data.content}} />
+      <UserBar type="from" infos={['发布于' + data.created_at, data.visit_count + '次浏览']}>
       </UserBar>
     </div>
   )
@@ -19,7 +22,10 @@ function StoryCard() {
 class Page extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      storyPrimay: {},
+      storyList: [],
+    };
   }
 
   static async getInitialProps({ Component, router, ctx }) {
@@ -28,6 +34,14 @@ class Page extends React.Component {
 
   componentDidMount() {
     this.props.actions.setTitle('故事');
+    this.getStoryList();
+  }
+
+  getStoryList = () => {
+    api.storyList().then(res => {
+
+      this.setState({ storyPrimay: res.data.list[0], storyList: res.data.list.splice(1) })
+    });
   }
 
   render() {
@@ -35,14 +49,15 @@ class Page extends React.Component {
       <React.Fragment>
         <div className="story">
           <div className="story__big">
-            <h1>腾讯设计师在路边摊的 “暖心实践”</h1>
-            <p>这家肠粉店，开了 8 年了，在去公司路上，为了吃早点，我必须提早一点到公司，虽然常见面，但我们的交谈也仅限于 “老板，来份双蛋的”。</p>
-            <div className="story__big-img"></div>
+            <h1>{this.state.storyPrimay.title}</h1>
+            <div className="story__big-content" dangerouslySetInnerHTML={{__html: this.state.storyPrimay.content}}></div>
+            <div className="story__big-img">
+              <img src={this.state.storyPrimay.image} alt=""/>
+            </div>
           </div>
-
-          <StoryCard></StoryCard>
-          <StoryCard></StoryCard>
-          <StoryCard></StoryCard>
+          {this.state.storyList.map(x => 
+            <StoryCard data={x} key={x.id}/>
+          )}
         </div>
       </React.Fragment>
     )

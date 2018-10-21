@@ -1,4 +1,5 @@
 .story {
+  padding-bottom: 50px;
   .story__big {
     position: relative;
     height: 320px;
@@ -11,9 +12,11 @@
       color: #4F4F4F;
       margin: 50px 0 30px 0;
     }
-    p {
+    .story__big-content {
       font-size: 16px;
       color: #7C7C7C;
+      height: 150px;
+      overflow: hidden;
     }
     .story__big-img {
       position: absolute;
@@ -22,6 +25,10 @@
       width: 360px;
       height: 250px;
       background-color: #eee;
+      overflow: hidden;
+      img{
+        width: 100%
+      }
     }
   }
   .story__card {
@@ -41,6 +48,14 @@
       width: 270px;
       height: 150px;
       background-color: #eee;
+      overflow: hidden;
+      img{
+        width: 100%;
+      }
+    }
+    .story__card-content{
+      height: 80px;
+      overflow: hidden;
     }
     p {
       font-size: 18px;

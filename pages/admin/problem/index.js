@@ -6,7 +6,8 @@ import api from 'app/api';
 import Link from 'next/link';
 import Router from 'next/router';
 import { TableEx } from 'app/components';
-import { Button, Modal, Row, Col, Input, Divider, Card, Avatar, Tooltip, Tag, Select } from 'antd';
+import { Button, Modal, Row, Col, Input, Divider, Card, Avatar, Tooltip, Tag, Select, List } from 'antd';
+
 
 const TextArea = Input.TextArea;
 const Option = Select.Option;
@@ -25,6 +26,7 @@ class Page extends React.Component {
     };
   }
 
+
   static async getInitialProps({ Component, router, ctx }) {
     return {};
   }
@@ -36,7 +38,7 @@ class Page extends React.Component {
 
 
   getTableList = () => {
-    console.log(this.state.params)
+    console.log(this.state.params);
     this.setState({
       history: this.state.history.concat([this.state.params])
     });
@@ -63,7 +65,7 @@ class Page extends React.Component {
   onShowVerify = (data) => {
     console.log(data);
     this.setState({ visible: true, verifyData: data, verifyMsg: '', solutionList: [] });
-    // this.getSolutionList(data.id);
+    this.getSolutionList(data.id);
   }
 
   onHideVerify = () => {
@@ -173,21 +175,33 @@ class Page extends React.Component {
               </div>
             </Col>
           </Row>
-            {this.state.solutionList.map(x => 
-            <Row>
-              <Col span="16">
-                <Meta
-                  avatar={<Avatar src={_.get(x, 'user_data.avatar')} />}
-                  title={_.get(x, 'user_data.name')}
-                  description={x.content}
+          <List
+            itemLayout="horizontal"
+            dataSource={this.state.solutionList}
+            renderItem={item => (
+              <List.Item actions={[<Button size="small">允许</Button>]}>
+                <List.Item.Meta
+                  avatar={<Avatar src={_.get(item, 'user_data.avatar')} />}
+                  title={<UserCard data={_.get(item, 'user_data')}/>}
+                  description={
+                    <div>
+                      {item.content}
+                      <div><a href="">查看评论</a></div>
+                      <List
+                        dataSource={[]}
+                      >
+                        <List.Item>
+                          sdfdsf
+                        </List.Item>
+                      </List>
+
+                    </div>
+                  }
                 />
-              </Col>
-              <Col span={8}>
-                <Button>通过</Button>&nbsp;
-                <Button type="danger">不通过</Button>
-              </Col>
-            </Row>
-          )}
+              </List.Item>
+            )}
+          />
+
         </Modal>
       </AdminLayout>
     )

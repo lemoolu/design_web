@@ -6,6 +6,7 @@ import { Input, Button } from 'app/components';
 import api from 'app/api';
 import Router from 'next/router';
 import Link from 'next/link';
+import { Tag } from 'antd';
 
 class Page extends React.Component {
   constructor(props) {
@@ -63,8 +64,11 @@ class Page extends React.Component {
             </div>
             <span className="my_background-name">{_.get(userData, 'name')}</span>
             <span className="my_background-exp">超能力 {_.get(userData, 'ability_value')}</span>
-            <Link href="/my/edit"><a className="my_background-setting">设置</a></Link>
-            <Link href="/my/code"><a className="my_background-code">我的邀请码</a></Link>
+            <Link href="/my/edit"><a className="my_background-setting">编辑</a></Link>
+            {
+              // <Link href="/my/code"><a className="my_background-code">我的邀请码</a></Link>
+            }
+
           </div>
           <div className="my_desc">
             <h3>{_.get(userData, 'job') || '（神秘设计师）'}</h3>
@@ -79,7 +83,26 @@ class Page extends React.Component {
             </ul>
             <ul className="my_problems-list">
               { this.state.problemList[this.state.problemType] && this.state.problemList[this.state.problemType].map(item => 
-                <li><a>{item.title}</a></li>
+                <li>
+                  <Link href={{ pathname: '/problem/detail', query: { id: item.id } }}>
+                    <a>{item.title} </a>
+                  </Link>
+                  
+
+                  {this.state.problemType === 'create' && 
+                    <span className="status-bar">
+                      {item.status === undefined && <Tag color="orange">审核中</Tag>}
+                      {item.status === true && <Tag color="green">审核通过</Tag>}
+                      {item.status === false && <Tag color="red">审核不通过</Tag>}
+
+                      {(item.status === true || item.status === false ) && 
+                        <Link href={{ pathname: '/problem/add', query: { id: item.id } }}>
+                          <a className="edit" >编辑</a>
+                        </Link>
+                      }
+                    </span>
+                  }
+                </li>
               )}
             </ul>
           </div>

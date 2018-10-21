@@ -7,6 +7,7 @@ import { needLogin } from 'app/components';
 import { Input, Button, message } from 'antd';
 import api from 'app/api';
 import qs from 'qs';
+import SolutionAdd from './_SolutionAdd.jsx';
 
 
 const TextArea = Input.TextArea;
@@ -77,41 +78,32 @@ class Page extends React.Component {
 
   }
 
-  onShowAddSolution = () => {
-    console.log(this.props)
+  onShowAddSolution = (data = {}) => {
     if (!this.props.userData) {
       Router.push({
         pathname: '/login',
-        // query: { id }
       });
       return;
     }
-    this.setState({ addSolution: true });
+    this.setState({ addSolution: true, solutionData: data });
   }
 
   onHideAddSolution = () => {
     this.setState({ addSolution: false });
   }
 
-  onAddSolutionContentChange = (e) => {
-    this.setState({ addSolutionContent: e.target.value })
-  }
-
-  onAddSolutionSubmit = () => {
-    api.solutionAdd({ content: this.state.addSolutionContent, problem_id: this.state.problemId }).then(res => {
-      message.success('解决方案添加成功');
-      api.solutionList({ problem_id: this.state.problemId, page: 1, pageSize: 5 }).then(res => {
-        let solutionList = res.data.list;
-        solutionList = solutionList.concat(this.state.solutionList);
-        solutionList = _.unionBy(solutionList, 'id');
-        this.setState({
-          solutionList,
-        });
-      });
+  onAddSolutionSuccess = () => {
+    console.log('---')
+    api.solutionList({ problem_id: this.state.problemId, page: 1, pageSize: 5 }).then(res => {
+      let solutionList = res.data.list;
+      solutionList = solutionList.concat(this.state.solutionList);
+      solutionList = _.unionBy(solutionList, 'id');
       this.setState({
-        addSolution: false,
-        addSolutionContent: ''
+        solutionList,
       });
+    });
+    this.setState({
+      addSolution: false,
     });
   }
 
@@ -132,16 +124,13 @@ class Page extends React.Component {
     });
   }
 
-
-
   render() {
-
     const problemData = this.state.problemData || {};
 
     return (
       <React.Fragment>
         <div className="problem-detail">
-          <div className="problem-detail__rate">进度：头脑风暴</div>
+          <div className="problem-detail__rate" style={{display: 'none'}}>进度：头脑风暴</div>
           <h1 className="problem-detail__title">{problemData.title}</h1>
           <div className="problem-detail__main">
             {problemData.content}
@@ -154,7 +143,7 @@ class Page extends React.Component {
               <span>发布于 {problemData.created_at}</span>
               <span>{problemData.visit_count}次浏览</span>
               <span>{problemData.star_count}个持续关注</span>
-              <a onClick={this.onShowAddSolution}>写解决方案</a>&nbsp;
+              <a onClick={this.onShowAddSolution}>写解决方案</a>&nbsp;&nbsp;&nbsp;
               <a onClick={this.onStarProblem}>关注</a>
             </div>
           </UserBar>
@@ -162,21 +151,19 @@ class Page extends React.Component {
 
         <div className="problem-solution">
 
-          {this.state.addSolution === true && 
-            <div>
-              <TextArea placeholder="填写我的解决方案" value={this.state.addSolutionContent} onChange={this.onAddSolutionContentChange}></TextArea><br/>
-              <Button onClick={this.onAddSolutionSubmit}>提交</Button>
-            </div>
-          }
-
           {this.state.solutionList.map( x => 
-            <Solution data={x} key={x.id}></Solution>
+            <Solution 
+              data={x} 
+              key={x.id} 
+              userData={this.props.userData} 
+              onEdit={this.onShowAddSolution}
+            />
           )}
 
-          {this.state.hasSolution === false && this.state.addSolution === false && 
+          {this.state.hasSolution === false && 
             <div className="problem-solutio__not-have">
-              还没有解决方案，需要你的超能力<br/>
-              <Button onClick={this.onShowAddSolution}>写我的解决方案</Button>
+              <span className="message">还没有解决方案，需要你的超能力~</span>
+              <Button onClick={this.onShowAddSolution} type="primary" size="large">写我的解决方案</Button>
             </div>
           }
           
@@ -191,6 +178,15 @@ class Page extends React.Component {
             </div>
           }
         </div>
+
+        {this.state.addSolution === true && 
+          <SolutionAdd 
+            data={this.state.solutionData}
+            problemId={this.state.problemId}
+            onCancel={this.onHideAddSolution} 
+            onSuccess={this.onAddSolutionSuccess}
+          />
+        }
       </React.Fragment>
     )
   }
