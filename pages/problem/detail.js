@@ -137,6 +137,8 @@ class Page extends React.Component {
           <div className="problem-detail__main-img">
             <img src={problemData.image} alt=""/>
           </div>
+        </div>
+        <div className="problem-detail__creater">
           <UserBar data={problemData.user_data}>
             <div className="problem-detail__tool">
               <span>发布于 {problemData.created_at}</span>
