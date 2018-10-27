@@ -5,6 +5,7 @@ import { Header, ProblemCard, Banner } from 'app/containers';
 import { Input, Button } from 'app/components';
 import api from 'app/api';
 import Router from 'next/router';
+import { Row, Col } from 'antd';
 
 function StoryCard({ index, data }) {
   return (
@@ -34,7 +35,6 @@ class Page extends React.Component {
     this.props.actions.setTitle('首页');
     this.getMoreProblem();
     this.getStoryList();
-    // this.onLinkDetail(101);
   }
 
   getMoreProblem = () => {
@@ -50,14 +50,6 @@ class Page extends React.Component {
     });
   }
 
-  onLinkDetail = (id) => {
-    Router.push({
-      pathname: '/problem/detail',
-      query: { id }
-    });
-  }
-
-
   getStoryList = () => {
     api.storyList().then(res => {
       this.setState({ storyList: res.data.list })
@@ -70,28 +62,32 @@ class Page extends React.Component {
       <React.Fragment>
         <Banner />
         <div className="home__content">
-          <h1 className="home__content-title">“用设计解决这个世界上的小问题”</h1>
-          <div className="home__problems">
-            <h2 className="home__content-subtitle">问题/Problem</h2>
-            {this.state.problemList.map( x => 
-              <ProblemCard data={x} key={x.id}/>
-            )}
+          <h1 className="title">“用设计解决这个世界上的小问题”</h1>
             
-            {this.state.hasMore && 
-              <a className="home__problems-more-btn" onClick={this.getMoreProblem}>查看更多</a>  
-            }
+          <Row gutter={32}>
+            <Col span={16}>
+              <h2 className="subtitle">问题/Problem</h2>
+              {this.state.problemList.map( x => 
+                <ProblemCard data={x} key={x.id}/>
+              )}
+              
+              {this.state.hasMore && 
+                <div className="block-center">
+                  <a className="link-primary" onClick={this.getMoreProblem}>查看更多</a> 
+                </div>
+              }
+              {!this.state.hasMore && 
+                <span className="no-more">- 没有更多了 -</span>  
+              }
+            </Col>
 
-            {!this.state.hasMore && 
-              <div className="home__problems-no-more">- 没有更多了 -</div>  
-            }
-
-          </div>
-          <div className="home__storys">
-            <h2 className="home__content-subtitle">故事/Story</h2>
-            {this.state.storyList.map((x, index) => 
-              <StoryCard data={x} index={index+1}/>
-            )}
-          </div>
+            <Col span="8">
+              <h2 className="subtitle">故事/Story</h2>
+              {this.state.storyList.map((x, index) => 
+                <StoryCard data={x} index={index+1} key={index}/>
+              )}
+            </Col>
+          </Row>
         </div>
       </React.Fragment>
     )

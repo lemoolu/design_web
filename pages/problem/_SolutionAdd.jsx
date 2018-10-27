@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { Header } from 'app/containers';
+import { Header, Editor } from 'app/containers';
 import api from 'app/api';
 import Link from 'next/link';
 import Router from 'next/router';
@@ -77,18 +77,19 @@ class SolutionAdd extends React.Component {
           cancelText="取消"
           onOk={this.onAddSolutionSubmit}
         >
-          <TextArea 
-            placeholder="填写我的解决方案" 
-            value={this.state.data.content} 
-            onChange={e => this.onChange('content', e.target.value)}
-            rows={6}
-            style={{marginBottom: 10}}
-          />
-          <UploadImg
-            onChange={url => this.onChange('image', url)}
+          <Editor 
+            value={this.state.data.content}
+            onChange={v => this.onChange('content', v)}
+            apiUrl="/api/upload"
           >
-            {image ? <img src={image} alt="avatar" style={{maxWidth: 400}}/> : uploadButton}
-          </UploadImg>
+          </Editor>
+          {
+          // <UploadImg
+          //   onChange={url => this.onChange('image', url)}
+          // >
+          //   {image ? <img src={image} alt="avatar" style={{maxWidth: 400}}/> : uploadButton}
+          // </UploadImg>
+          }
         </Modal>
       </React.Fragment>
     )

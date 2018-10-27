@@ -5,7 +5,6 @@ import api from 'app/api';
 import axios from 'axios';
 import { Header } from 'app/containers';
 
-
 export default class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {}
@@ -20,7 +19,7 @@ export default class MyApp extends App {
     super(props);
     this.state = {
       title: undefined,
-      userData: null,
+      userData: props.userData,
       actions: {
         setTitle: this.setTitle
       }

@@ -4,6 +4,8 @@ import _ from 'lodash';
 import { Header } from 'app/containers';
 import { Input, Button } from 'app/components';
 import api from 'app/api';
+import './style.less';
+
 
 class Banner extends React.Component {
   constructor(props) {

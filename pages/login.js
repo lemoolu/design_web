@@ -79,7 +79,7 @@ class Page extends React.Component {
           <Button className="login__form-btn" size="large" type="primary" onClick={this.onSubmit}>登录</Button>
           <div>
             
-          <Link href="/signup"><a>跳转到注册页面</a></Link>
+          <Link href="/signup"><a className="link-primary">还没有账号，注册一个吧</a></Link>
           </div>
         </div>
       </div> 

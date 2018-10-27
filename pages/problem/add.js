@@ -117,7 +117,7 @@ class Page extends React.Component {
     const uploadButton = (
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'} />
-        <div className="ant-upload-text">Upload</div>
+        <div className="ant-upload-text">图片</div>
       </div>
     );
 
@@ -126,7 +126,6 @@ class Page extends React.Component {
         <h1>{this.state.id ? '编辑问题' : '发布问题'}</h1>
         <Input 
           placeholder="填写你认为需要被解决的问题标题" 
-          style={{marginTop: 20}} 
           value={this.state.formData.title} 
           onChange={e => this.handleChange('title', e.target.value)}
         >
@@ -135,6 +134,7 @@ class Page extends React.Component {
         <div style={{textAlign: 'left', marginBottom: 20}} id="editor"></div>
         <TextArea 
           style={{marginBottom: 20}} 
+          placeholder="填写问题内容"
           rows={8}
           value={this.state.formData.content} 
           onChange={e => this.handleChange('content', e.target.value)}
@@ -144,7 +144,7 @@ class Page extends React.Component {
         >
           {image ? <img src={image} alt="avatar" style={{maxWidth: 400}}/> : uploadButton}
         </UploadImg>
-        <Button style={{marginTop: '20px', minWidth: 80}} onClick={this.onSubmit} size="large">发布</Button>
+        <Button type="primary" style={{marginTop: '20px', minWidth: 80}} onClick={this.onSubmit} size="large">发布</Button>
       </div>
     )
   }

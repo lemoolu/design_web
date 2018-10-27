@@ -9,7 +9,7 @@ import Router from 'next/router';
 import { Popover, Avatar } from 'antd';
 
 
-class UserCard extends React.Component {
+class Editor extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -17,6 +17,8 @@ class UserCard extends React.Component {
   static defaultProps = {
     value: undefined,
     onChange: undefined,
+    apiUrl: '/api/admin/upload',
+    placeholder: ''
   }
 
   componentWillReceiveProps(props) {
@@ -34,7 +36,7 @@ class UserCard extends React.Component {
       }
       const E = window.wangEditor;
       const editor = new E('#editor2');
-      editor.customConfig.uploadImgServer = '/api/admin/upload';
+      editor.customConfig.uploadImgServer = this.props.apiUrl;
       editor.customConfig.uploadImgParams = {
         from: 'editor'
       };
@@ -66,9 +68,9 @@ class UserCard extends React.Component {
   render() {
     const data = this.props.data;
     return (
-      <div style={{margin: '20px 0'}} id="editor2"></div>
+      <div style={{margin: '0px 0'}} id="editor2"></div>
     )
   }
 }
 
-export default UserCard;
+export default Editor;

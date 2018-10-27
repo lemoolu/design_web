@@ -1,5 +1,6 @@
 import React from 'react';
 import { Upload, message } from 'antd';
+import _ from 'lodash';
 
 
 function getBase64(img, callback) {
@@ -34,13 +35,11 @@ class UploadImg extends React.Component {
   }
 
   handleChange = (info) => {
-
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
       return;
     }
     if (info.file.status === 'done') {
-      console.log(info)
       getBase64(info.file.originFileObj, imageUrl => {
         this.setState({
           loading: false,

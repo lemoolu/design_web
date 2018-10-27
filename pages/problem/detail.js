@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import Router from 'next/router';
-import { Header, UserBar, Solution } from 'app/containers';
+import { Header, UserBar, SolutionCard } from 'app/containers';
 import { needLogin } from 'app/components';
 import { Input, Button, message } from 'antd';
 import api from 'app/api';
@@ -23,7 +23,7 @@ class Page extends React.Component {
       solutionListPage: 1,
       solutionList: [],
       addSolution: false,
-      hasSolution: true, // 是否有解决方案
+      hasSolution: undefined, // 是否有解决方案
       hasSolutionMore: true, // 是否还有解决方案
       commentList: [], // 评论列表 {solutionId, page, list} 
     };
@@ -128,10 +128,9 @@ class Page extends React.Component {
     const problemData = this.state.problemData || {};
 
     return (
-      <React.Fragment>
-        <div className="problem-detail">
-          <div className="problem-detail__rate" style={{display: 'none'}}>进度：头脑风暴</div>
-          <h1 className="problem-detail__title">{problemData.title}</h1>
+      <div className="problem-detail">
+        <div className="problem-detail__content">
+          <h1>{problemData.title}</h1>
           <div className="problem-detail__main">
             {problemData.content}
           </div>
@@ -139,20 +138,19 @@ class Page extends React.Component {
             <img src={problemData.image} alt=""/>
           </div>
           <UserBar data={problemData.user_data}>
-            <div className="problem-detail__user">
+            <div className="problem-detail__tool">
               <span>发布于 {problemData.created_at}</span>
               <span>{problemData.visit_count}次浏览</span>
               <span>{problemData.star_count}个持续关注</span>
-              <a onClick={this.onShowAddSolution}>写解决方案</a>&nbsp;&nbsp;&nbsp;
-              <a onClick={this.onStarProblem}>关注</a>
+              <a className="link-primary" onClick={this.onStarProblem}>关注</a>
+              <a className="link-primary" onClick={this.onShowAddSolution}>写解决方案</a>
             </div>
           </UserBar>
         </div>
 
         <div className="problem-solution">
-
           {this.state.solutionList.map( x => 
-            <Solution 
+            <SolutionCard
               data={x} 
               key={x.id} 
               userData={this.props.userData} 
@@ -160,23 +158,24 @@ class Page extends React.Component {
             />
           )}
 
-          {this.state.hasSolution === false && 
-            <div className="problem-solutio__not-have">
-              <span className="message">还没有解决方案，需要你的超能力~</span>
-              <Button onClick={this.onShowAddSolution} type="primary" size="large">写我的解决方案</Button>
-            </div>
-          }
-          
-          {this.state.hasSolution === true && 
-            <div>
-              {this.state.hasSolutionMore && 
-                <Button onClick={this.getSolutionList}>查看更多解决方案</Button>
-              }      
-              {!this.state.hasSolutionMore && 
-                <Button >没有更多解决方案了</Button>
-              } 
-            </div>
-          }
+          <div className="problem-detail__footer">
+            {this.state.hasSolution === false && 
+              <span className="no-more">还没有解决方案，需要你的超能力~</span>
+            }
+            {this.state.hasSolution === true && 
+              <React.Fragment>
+                {this.state.hasSolutionMore && 
+                  <a className="link-primary" onClick={this.getSolutionList}>查看更多解决方案</a>
+                }      
+                {!this.state.hasSolutionMore && 
+                  <span className="no-more">- 没有更多解决方案了 -</span>
+                } 
+              </React.Fragment>
+            }
+            <br />
+            <Button onClick={this.onShowAddSolution} type="primary" size="large">写我的解决方案</Button>
+          </div>
+
         </div>
 
         {this.state.addSolution === true && 
@@ -187,7 +186,7 @@ class Page extends React.Component {
             onSuccess={this.onAddSolutionSuccess}
           />
         }
-      </React.Fragment>
+      </div>
     )
   }
 }
