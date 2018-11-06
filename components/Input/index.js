@@ -1,4 +1,5 @@
 import React from 'react';
+import './style.less';
 
 class Input extends React.Component {
   componentDidMount() {}
@@ -33,7 +34,5 @@ class Input extends React.Component {
     )
   }
 }
-
-
 
 export default Input;
