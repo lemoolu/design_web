@@ -1,18 +1,23 @@
 .my {
   .my_background {
+    height: 250px;
     position: relative;
     text-align: center;
     padding-top: 68px;
     padding-bottom: 15px;
     border-bottom: 1px solid #979797;
+    overflow: hidden;
   }
   .my_background-avator {
-    width: 60px;
-    height: 60px;
+    position: absolute;
+    left: 0;
+    top: 70px;
+    width: 70px;
+    height: 70px;
     overflow: hidden;
     border-radius: 50%;
     margin: 0 auto 10px auto;
-    border: 1px solid #eee;
+    border: 1px solid #979797;
     img {
       width: 100%;
     }
@@ -21,30 +26,37 @@
     display: block;
     font-size: 16px;
     color: #282828;
-    margin-bottom: 46px;
+    position: absolute;
+    top: 82px;
+    left: 100px;
   }
   .my_background-exp {
     font-size: 20px;
     color: @color-primary;
+    position: absolute;
+    top: 118px;
+    left: 100px;
   }
   .my_background-code {
     position: absolute;
-    right: 0;
-    bottom: 17px;
+    left: 0;
+    bottom: 28px;
     color: @color-font-base;
   }
   .my_background-setting {
     position: absolute;
     right: 0px;
-    bottom: 17px;
+    top: 28px;
   }
-
   .my_desc {
-    padding: 60px 0 40px 0;
+    position: absolute;
+    left: 310px;
+    top: 70px;
+    text-align: left;
     h3 {
       font-size: 20px;
       color: @color-font-base;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
   }
 
@@ -57,11 +69,11 @@
       padding: 0;
     }
     ul.my_problems-tab {
-      padding: 30px 0;
+      padding: 25px 0;
       li {
         display: inline-block;
         font-size: 20px;
-        color: #7C7C7C;
+        color: #7c7c7c;
         margin-right: 24px;
         cursor: pointer;
         &.sel {
@@ -74,18 +86,21 @@
         position: relative;
         display: block;
         padding: 5px 0 5px 20px;
+        a.link-primary {
+          font-size: 14px;
+        }
         &:before {
           position: absolute;
           left: 0;
           top: 12px;
           width: 10px;
           height: 10px;
-          background: #FFEE55;
+          background: #ffee55;
           border-radius: 50%;
-          content: ''
+          content: '';
         }
         .status-bar {
-          margin-left: 20px;
+          margin-left: 30px;
         }
       }
     }
@@ -93,5 +108,5 @@
 }
 
 .my__edit {
-  padding: 50px 0
+  padding: 50px 0;
 }

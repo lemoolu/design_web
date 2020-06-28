@@ -65,15 +65,13 @@ class Page extends React.Component {
             <span className="my_background-name">{_.get(userData, 'name')}</span>
             <span className="my_background-exp">超能力 {_.get(userData, 'ability_value')}</span>
             <Link href="/my/edit"><a className="my_background-setting link-primary">编辑</a></Link>
-            {
-              // <Link href="/my/code"><a className="my_background-code">我的邀请码</a></Link>
-            }
+              <Link href="/my/code"><a className="my_background-code">我的邀请码</a></Link>
+            <div className="my_desc">
+              <h3>{_.get(userData, 'job') || '（神秘设计师）'}</h3>
+              <p>{_.get(userData, 'introduction') || '（没有任何介绍....）'}</p>
+            </div>
+          </div>
 
-          </div>
-          <div className="my_desc">
-            <h3>{_.get(userData, 'job') || '（神秘设计师）'}</h3>
-            <p>{_.get(userData, 'introduction') || '（没有任何介绍....）'}</p>
-          </div>
 
           <div className="my_problems">
             <ul className="my_problems-tab">
@@ -96,7 +94,7 @@ class Page extends React.Component {
 
                       {(item.status === true || item.status === false ) && 
                         <Link href={{ pathname: '/problem/add', query: { id: item.id } }}>
-                          <a className="link-primary">编辑</a>
+                          <a className="link-primary">修改</a>
                         </Link>
                       }
                     </span>

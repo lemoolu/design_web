@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
-import { Header, ProblemCard, Banner } from 'app/containers';
+import { Header, ProblemCard, Banner, Line } from 'app/containers';
 import { Input, Button } from 'app/components';
 import api from 'app/api';
 import Router from 'next/router';
@@ -61,6 +61,7 @@ class Page extends React.Component {
     return (
       <React.Fragment>
         <Banner />
+        <Line />
         <div className="home__content">
           <h1 className="title">“用设计解决这个世界上的小问题”</h1>
             

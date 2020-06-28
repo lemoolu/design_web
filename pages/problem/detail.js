@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import _ from 'lodash';
 import Router from 'next/router';
-import { Header, UserBar, SolutionCard } from 'app/containers';
+import { Header, UserBar, SolutionCard, Line } from 'app/containers';
 import { needLogin } from 'app/components';
 import { Input, Button, message } from 'antd';
 import api from 'app/api';
@@ -138,6 +138,7 @@ class Page extends React.Component {
             <img src={problemData.image} alt=""/>
           </div>
         </div>
+
         <div className="problem-detail__creater">
           <UserBar data={problemData.user_data}>
             <div className="problem-detail__tool">
@@ -149,6 +150,8 @@ class Page extends React.Component {
             </div>
           </UserBar>
         </div>
+
+        <Line color="#E8E8E8"></Line>
 
         <div className="problem-solution">
           {this.state.solutionList.map( x => 

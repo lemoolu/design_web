@@ -97,11 +97,11 @@ class Solution extends React.Component {
     } else {
       hasMore = false;
     }
-
+    //{data.created_at}
     return (
       <div className={classNames.join(' ')}>
         <UserBar data={data.user_data}>
-          {data.created_at} &nbsp;&nbsp;&nbsp;
+          <span style={{color: '#7C7C7C'}}>给出一个方案</span>
           {_.get(this.props.userData, 'id') === data.user_id && 
             <a className="link-primary" onClick={this.onEditSolution}>编辑</a>}
         </UserBar>
